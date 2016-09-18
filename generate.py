@@ -1,3 +1,4 @@
+import time
 from random import random
 from utils import pr
 
@@ -12,15 +13,18 @@ def iterate(c):
         if abs(z) > 2:
             return l
         l += [(z, i)]
-        # z = z ** 2 + c
-        z = 2 * z ** 3 - z ** 2 + z + c
+        z = z ** 2 + c
+        # z = 2 * z ** 3 - z ** 2 + z + c
     return []
     
 
 with open('.data/points.dat', 'a') as f:
     amount = 0
 
+    st = time.time()
+
     pb = pr.Bar()
+    pb.start()
 
     while amount < NumPoints:
         pb.update(amount / NumPoints)
@@ -30,3 +34,4 @@ with open('.data/points.dat', 'a') as f:
             f.write("{} {} {} {} {}\n".format(re, im, p.real, p.imag, i))
             amount += 1
     pb.end()
+    print("Finished after {:.2f} seconds".format(time.time() - st))
