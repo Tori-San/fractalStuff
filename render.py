@@ -1,13 +1,15 @@
 from PIL import Image
 import math
+from utils import pr
+import time
 import cmath
 
 import sys
 
-datafile = '.data/points.dat' #if len(sys.argv) == 1 else sys.argv[1]+".drata"
-imgfile = 'out/fractal.png' #if len(sys.argv) == 1 else sys.argv[1]+".png"
+datafile = '.data/points.dat'  # if len(sys.argv) == 1 else sys.argv[1]+".drata"
+imgfile = 'out/fractal.png'  # if len(sys.argv) == 1 else sys.argv[1]+".png"
 
-W, H = 1920, 1080
+W, H = 3840, 2160
 
 S_h = 1
 S_w = W / H * S_h
@@ -34,7 +36,7 @@ bData = {
 }
 
 print("reading...")
-
+st = time.time()
 with open(datafile, 'r') as f:
     for ln in f:
         [sr, si, dr, di, it] = list(map(float, ln[:-1].split(" ")))
@@ -42,8 +44,12 @@ with open(datafile, 'r') as f:
         x, y = translate_xy(dr + di * 1j)
         if 0 <= x < W and 0 <= y < H:
             for ch in channels:
-                if it <= Limits[ch]:
+                if 15 < it <= Limits[ch]:
                     bData[ch][x][y] += 1
+print("Finished after {:.2f} seconds".format(time.time() - st))
+
+print("calculating...")
+st = time.time()
 
 brightest = {
     ch: max(max(bData[ch][i] for i in range(W))) for ch in channels
@@ -59,15 +65,20 @@ imgdata = []
 def sc(c):
     return min(255, max(0, math.floor(c+0.5)))
 
-print("calculating...")
+
+b = pr.Bar()
+b.start()
 
 for y in range(H):
+    b.update(y / H)
     for x in range(W):
         col = {ch: scl[ch] * bData[ch][x][y] for ch in channels}
 
         imgdata += [tuple(sc(col[ch]) for ch in channels)]
+b.end()
+print("Finished after {:.2f} seconds".format(time.time() - st))
 
-print("writing...")
+print("writing to file...")
 
 img.putdata(imgdata)
 img.save(imgfile)
