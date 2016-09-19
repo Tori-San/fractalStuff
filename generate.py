@@ -13,8 +13,9 @@ def iterate(c):
         if abs(z) > 2:
             return l
         l += [(z, i)]
-        z = z ** 2 + c
-        # z = 2 * z ** 3 - z ** 2 + z + c
+        z = z ** 2 + c #  Buddhabrot
+        # z = z ** 2 - z + c #  Lotus
+        # z = 2 * z ** 3 - z ** 2 + z + c #  Butterfly
     return []
     
 
