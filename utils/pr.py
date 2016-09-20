@@ -6,7 +6,6 @@ class Bar:
         self.full = full
         self.empty = empty
         self.length = length
-        self.totalLength = len(left) + length + len(right) + 7
         self.progress = 0
     
     def start(self):
@@ -16,7 +15,7 @@ class Bar:
         progress = int(self.length * x + 0.5)
         if progress > self.progress:
             self.progress = progress
-            print("\r" * self.totalLength, end="")
+            print("\r", end="")
             print(self.left +
                   self.progress * self.full +
                   (self.length - self.progress) * self.empty +
@@ -24,5 +23,5 @@ class Bar:
                   " {:.2f}%".format(100*x).rjust(6), end="")
 
     def end(self):
-        print("\r" * self.totalLength, end="")
+        print("\r", end="")
         print(self.left + self.length * self.full + self.right + 7*" ")
