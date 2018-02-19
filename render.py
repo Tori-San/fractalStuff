@@ -6,15 +6,15 @@ import cmath
 
 import sys
 
-datafile = '.data/points.dat'  # if len(sys.argv) == 1 else sys.argv[1]+".drata"
-imgfile = 'out/fractal.png'  # if len(sys.argv) == 1 else sys.argv[1]+".png"
+datafile = '.data/points.dat' if len(sys.argv) == 1 else sys.argv[1]
+imgfile = 'out/fractal.png' if len(sys.argv) == 1 else sys.argv[2]
 
 W, H = 3840, 2160
 
 S_h = 1
 S_w = W / H * S_h
 
-Limits = {"r": 10000, "g": 1000, "b": 100}
+Limits = {"r": 1000, "g": 300, "b": 100}
 channels = ["r", "g", "b"]
 
 img = Image.new("RGB", (W, H))
@@ -39,8 +39,8 @@ print("reading...")
 st = time.time()
 with open(datafile, 'r') as f:
     for ln in f:
-        [sr, si, dr, di, it] = list(map(float, ln[:-1].split(" ")))
-        
+        [sr, _, si, dr, _, di, it] = list(map(float, ln[:-1].split(" ")))
+
         x, y = translate_xy(dr + di * 1j)
         if 0 <= x < W and 0 <= y < H:
             for ch in channels:
@@ -56,7 +56,8 @@ brightest = {
     }
 
 for ch in channels:
-    assert brightest[ch] != 0
+    #assert brightest[ch] != 0
+    brightest[ch] = max(1, brightest[ch])
 
 scl = {ch: 255 / brightest[ch] for ch in channels}
 imgdata = []
